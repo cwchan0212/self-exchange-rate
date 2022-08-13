@@ -1,7 +1,7 @@
 // set the dimensions and margins of the graph
-var margin = { top: 20, right: 20, bottom: 50, left: 70 },
-  width = 960 - margin.left - margin.right,
-  height = 500 - margin.top - margin.bottom;
+var margin = { top: 20, right: 20, bottom: 20, left: 20 },
+  width = 900 - margin.left - margin.right,
+  height = 600 - margin.top - margin.bottom;
 
 // parse the date / time
 var parseTime = d3.timeParse("%Y-%m-%d");
@@ -10,10 +10,51 @@ var parseTime = d3.timeParse("%Y-%m-%d");
 var x = d3.scaleTime().range([0, width]);
 var y = d3.scaleLinear().range([height, 0]);
 
-// append the svg obgect to the body of the page
+// append the svg object to the body of the page
 // appends a 'group' element to 'svg'
 // moves the 'group' element to the top left margin
-var svg = d3
+
+const createTitle = () => {
+  const title = d3
+    .select("body")
+    .append("div")
+    .attr("id", "title")
+    .html("Line Chart of Exchange Rate (GBP to HKD)");
+};
+createTitle();
+
+const createLegend = () => {
+  const footer = d3
+    .select("body")
+    .append("div")
+    .attr("id", "legend")
+    .html(
+      `Date (x) vs HKD/GBP (y)<br/> Exchange rate referred to <a href="http://exchangerate.host">exchangerate.host</a>`
+    );
+};
+
+const createStatistics = (dataset) => {
+  var sortedData = JSON.parse(JSON.stringify(dataset)); 
+  sortedData = sortedData.sort((a, b) => {
+    if (a.y && b.y) {
+      return a.y - b.y;
+    }
+  });
+
+  let minValue = sortedData[0];
+  let maxValue = sortedData[sortedData.length-1];
+  let curValue = dataset[dataset.length-1];
+  d3.select("body")
+    .append("div")
+    .attr("id","statistics")
+    .html(`<p>Min:  ${minValue["y"]} HKD/GBP on ${date2Str(new Date(minValue["x"]))}<br>
+          Max:   ${maxValue["y"]} HKD/GBP on ${date2Str(new Date(maxValue["x"]))}<br>
+          Now:   ${curValue["y"]} HKD/GBP on ${date2Str(new Date(curValue["x"]))}</p>
+    `)
+};
+
+
+let svg = d3
   .select("body")
   .append("svg")
   .attr("width", width + margin.left + margin.right)
@@ -21,14 +62,38 @@ var svg = d3
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-// Get the data
-
-const createTooltip = () => {
+let createTooltip = () => {
   return d3.select("body").append("div").attr("id", "tooltip");
 };
 
+// Get the data
+let today = new Date();
+today =
+  today.getFullYear() +
+  "-" +
+  (today.getMonth() + 1 < 10
+    ? "0" + (today.getMonth() + 1)
+    : today.getMonth() + 1) +
+  "-" +
+  (today.getDate() < 10 ? "0" + today.getDate() : today.getDate());
+
+let datefrom = new Date();
+datefrom.setDate(datefrom.getDate() - 90);
+datefrom =
+  datefrom.getFullYear() +
+  "-" +
+  (datefrom.getMonth() + 1 < 10
+    ? "0" + (datefrom.getMonth() + 1)
+    : datefrom.getMonth() + 1) +
+  "-" +
+  (datefrom.getDate() < 10 ? "0" + datefrom.getDate() : datefrom.getDate());
+
 let apiURL =
-  "https://api.exchangerate.host/timeseries?start_date=2022-08-01&end_date=2022-08-11&base=GBP&symbols=HKD";
+  "https://api.exchangerate.host/timeseries?start_date=" +
+  datefrom +
+  "&end_date=" +
+  today +
+  "&base=GBP&symbols=HKD";
 fetch(apiURL)
   .then(function (response) {
     return response.json();
@@ -37,10 +102,12 @@ fetch(apiURL)
     data = myJson.rates;
     var dataset = [];
     Object.entries(data).forEach(function (d) {
-      dataset.push({
-        x: parseTime(d[0]),
-        y: d[1]["HKD"],
-      });
+      if (d[1]["HKD"] !== undefined) {
+        dataset.push({
+          x: parseTime(d[0]),
+          y: d[1]["HKD"],
+        });
+      }
     });
 
     // define the line
@@ -82,7 +149,8 @@ fetch(apiURL)
         d3.axisBottom(x).ticks(d3.time).tickFormat(d3.timeFormat("%Y-%m-%d"))
       );
 
-      createTooltip()
+    createTooltip();
+    createStatistics(dataset);
 
     // Add the y Axis
     svg.append("g").call(d3.axisLeft(y));
@@ -92,7 +160,8 @@ fetch(apiURL)
       .data(dataset)
       .enter()
       .append("circle")
-      .attr("r", 4)
+      .style("fill", "gray")
+      .attr("r", 3)
       .attr("cx", function (d) {
         return x(d.x);
       })
@@ -100,37 +169,37 @@ fetch(apiURL)
         return y(d.y);
       })
       .on("mouseover", (e, d) => {
-
         d3.select("#tooltip")
-        .style("opacity", 0.85)
-        .style("left", e.pageX + 5 + "px")
-        .style("top", e.pageY + "px")
-        // d3.timeFormat("%Y-%m-%d") 
-        
-        .html(`<p>${date2Str(d.x)} <br>\HKD ${d.y} / GBP</p>`)
-        .attr("data-value", d.x + ", " + d.y)
-        console.log(d.x,  d.y)
+          .style("opacity", 0.85)
+          .style("left", e.pageX + 5 + "px")
+          .style("top", e.pageY + "px")
+          // d3.timeFormat("%Y-%m-%d")
 
+          .html(`<p>${date2Str(d.x)} <br>\HKD ${d.y} / GBP</p>`)
+          .attr("data-value", d.x + ", " + d.y);
+        console.log(d.x, d.y);
       })
-      .on("mouseout",  () => {
+      .on("mouseout", () => {
         return d3
-        .select("#tooltip")
-        .style("opacity", 0)
-        .style("left", 0)
-        .style("top", 0);
+          .select("#tooltip")
+          .style("opacity", 0)
+          .style("left", 0)
+          .style("top", 0);
       });
   });
 
-  const date2Str = (dd) => {
-    let dStr;
-    if (dd instanceof Date && !isNaN(dd)) {
-      dStr =
-        dd.getFullYear() +
-        "-" +
-        (dd.getMonth() + 1 < 10 ? "0" + (dd.getMonth() + 1) : dd.getMonth() + 1) +
-        "-" +
-        (dd.getDate() < 10 ? "0" + dd.getDate() : dd.getDate());
-      //console.log(dd.getDate())
-    }
-    return dStr;
-  };
+createLegend();
+
+const date2Str = (dd) => {
+  let dStr;
+  if (dd instanceof Date && !isNaN(dd)) {
+    dStr =
+      dd.getFullYear() +
+      "-" +
+      (dd.getMonth() + 1 < 10 ? "0" + (dd.getMonth() + 1) : dd.getMonth() + 1) +
+      "-" +
+      (dd.getDate() < 10 ? "0" + dd.getDate() : dd.getDate());
+    //console.log(dd.getDate())
+  }
+  return dStr;
+};
