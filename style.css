@@ -1,46 +1,93 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap');
 body {
-    font: 10px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+  font-family: "Roboto";
+  background-color: whitesmoke;
+  background-image: url("https://github.com/cwchan0212/self-exchange-rate/blob/main/assets/note.jpg?raw=true");
+  background-repeat: no-repeat, repeat;
+}
+
+#title {
+  font-size: 2rem;
+  text-align: center;
+  margin: 12px auto;
+  display: block;
+  color: whitesmoke;
+  text-shadow: 2px 2px #000000;
+  border-bottom: 2px solid rgb(255, 255, 255);
+}
+
+svg {
+  background-color: white;
+  padding: 20px 48px;
+  margin: 20px auto;
+  box-shadow: 0 0 12px black;
+}
+
+#legend {
+
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 16px;
+  color: darkblue;
+  text-shadow: 2px 2px whitesmoke;
+}
+
+#legend a {
+  color: darkblue;
+}
+
+#statistics {  
+  position:absolute;
+  top: 600px;
+  left: 1020px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  background-color: rgb(159, 175, 234);
+  padding-left: 10px;
+  min-width: 220px;
 }
 
 .axis path,
 .axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
 }
 
 .x.axis path {
-    display: none;
+  display: none;
 }
 
 .line {
-    fill: none;
-    stroke: steelblue;
-    stroke-width: 1.5px;
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
 }
 
 .overlay {
-    fill: none;
-    pointer-events: all;
+  fill: none;
+  pointer-events: all;
 }
 
-.focus circle {
-    fill: steelblue;
-}
-
-.focus text {
-    font-size: 14px;
+span {
+  color: red;
 }
 
 #tooltip {
-    font-size: 12px;
-    color: rgb(255, 255, 255);
-    min-height: 20px;
-    padding-left: 10px;
-    padding-right: 10px;
-    background-color: rgba(6, 51, 78, 0.95);
-    opacity: 0;
-    position: absolute;
-    margin-top: 2px;
-    border-radius: 2px;
+  font-size: 12px;
+  color: rgb(255, 255, 255);
+  min-height: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: rgba(6, 51, 78, 0.95);
+  opacity: 0;
+  position: absolute;
+  margin-top: 2px;
+  border-radius: 2px;
 }
