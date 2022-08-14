@@ -43,9 +43,9 @@ svg {
 }
 
 #statistics {  
-  position:absolute;
-  top: 600px;
-  left: 1020px;
+  position: absolute;
+  top: 60%;
+  left: 60%;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 10px;
   background-color: rgb(159, 175, 234);
