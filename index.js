@@ -49,7 +49,7 @@ const createStatistics = (dataset) => {
     .attr("id","statistics")
     .html(`<p>Min:  ${minValue["y"]} HKD/GBP on ${date2Str(new Date(minValue["x"]))}<br>
           Max:   ${maxValue["y"]} HKD/GBP on ${date2Str(new Date(maxValue["x"]))}<br>
-          Now:   ${curValue["y"]} HKD/GBP on ${date2Str(new Date(curValue["x"]))}</p>
+          <span id="today">Now:   ${curValue["y"]} HKD/GBP on ${date2Str(new Date(curValue["x"]))}</span></p>
     `)
 };
 
