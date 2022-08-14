@@ -19,7 +19,7 @@ const createTitle = () => {
     .select("body")
     .append("div")
     .attr("id", "title")
-    .html("Line Chart of Exchange Rate (GBP to HKD)");
+    .html("Line Chart of Exchange Rate (1GBP vs HKD)");
 };
 createTitle();
 
@@ -173,11 +173,11 @@ fetch(apiURL)
           .style("opacity", 0.85)
           .style("left", e.pageX + 5 + "px")
           .style("top", e.pageY + "px")
-          // d3.timeFormat("%Y-%m-%d")
+          // d3.timeFormat("%Y-%m-%d"
 
-          .html(`<p>${date2Str(d.x)} <br>\HKD ${d.y} / GBP</p>`)
+          .html(`<p>${date2Str(d.x)} <br> ${d.y} HKD/GBP</p>`)
           .attr("data-value", d.x + ", " + d.y);
-        console.log(d.x, d.y);
+        // console.log(d.x, d.y);
       })
       .on("mouseout", () => {
         return d3
