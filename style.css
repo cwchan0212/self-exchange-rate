@@ -91,3 +91,7 @@ span {
   margin-top: 2px;
   border-radius: 2px;
 }
+
+circle {
+  cursor: pointer;
+}
