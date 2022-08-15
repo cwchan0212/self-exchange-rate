@@ -47,9 +47,9 @@ const createStatistics = (dataset) => {
   d3.select("body")
     .append("div")
     .attr("id","statistics")
-    .html(`<p>Min:  ${minValue["y"]} HKD/GBP on ${date2Str(new Date(minValue["x"]))}<br>
+    .html(`Min:  ${minValue["y"]} HKD/GBP on ${date2Str(new Date(minValue["x"]))}<br>
           Max:   ${maxValue["y"]} HKD/GBP on ${date2Str(new Date(maxValue["x"]))}<br>
-          <span id="today">Now:   ${curValue["y"]} HKD/GBP on ${date2Str(new Date(curValue["x"]))}</span></p>
+          <span id="today">Now:   ${curValue["y"]} HKD/GBP on ${date2Str(new Date(curValue["x"]))}</span>
     `)
 };
 
